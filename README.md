@@ -15,3 +15,7 @@ The research questions are as follows:
 + What was the size and spatial distribution of the damage on vegetation in Deurnse Peel after the forest fires of 2020? 
 + What was the size and spatial distribution of the damage on vegetation in Deurnse Peel after the forest fire of 2022? 
 + To what extent has the vegetation recovered four years after the first fire?
+
+## What is where in this repository 🔍
+The R code is in the file "code_finalproject_SEIR_2025".
+The corresponding files are in the folder "files_finalproject_SEIR_2025". 
