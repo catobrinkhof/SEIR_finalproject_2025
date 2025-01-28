@@ -250,6 +250,10 @@ decrease_5<- length(which(values_change_5<=0))
 perc_decrease_5 <- (decrease_5/(decrease_5+increase_5))*100
 
 #Showing all decrease percentages and commenting what they mean
+#One remark: teh satellite image also contains areas that were not affected by the area.
+#It also includes some of the surrounding meadows, which are not part of the Deurnse Peel natural area at all.
+#As such, these percentages at most provide an indication. 
+                         
 perc_decrease_1 #50.5%: there was roughly as much decrease as increase in vegetation health before and after fire 1
 perc_decrease_2 #53%: even if we take the average of two years, omitting outliers, the same holds
 perc_decrease_3 #66%: after the second fire, 66% of the studied area showed a decline in vegetation health 
