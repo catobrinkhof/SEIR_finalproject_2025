@@ -151,5 +151,107 @@ for (i in seq_along(ndvi_list)) {
   mtext(captions[i], side = 1, line = 4, cex = 0.5, font = 1, col = "black", outer = FALSE)
 }
 
+#Now it is time to do the actual analysis
+#Question 1: Assessing the damage after fire no. 1
+#Comparison 1: april 2020 verus april 2021
+change_20200417_20210427 <- NDVI_20210427-NDVI_20200417
+
+#Avoiding outliers, comparison 1.1: average of april 2019 and 2020 versus april 2021 and april 2022
+change_avg20192020_avg20212022 <- ((NDVI_20210427+NDVI_20210427)/2)-((NDVI_20190418+NDVI_20200417)/2)
+
+#Question 2: Assessing the additional damage from fire no. 2 
+
+#Comparison 2.1: august 2022 v september 2022
+change_20220825_20220912 <- NDVI_20220912-NDVI_20220825
+
+#Comparison 2.2: april 2022 versus april 2023
+change_20220417_20230405 <- NDVI_20230405-NDVI_20220417
+
+#Avoiding outliers, comparison 2.3: average of april 2021 and 2022 versus april 2023 and 2024
+change_avg20212022_avg20232024 <- ((NDVI_20230405+NDVI_20240429)/2)-((NDVI_20210427+NDVI_20220417)/2)
+
+#Question 3: To what extent has the vegetation recovered four years later? 
+#Comparison 3
+change_avg20192020_avg20232024 <- ((NDVI_20230405+NDVI_20240429)/2)-((NDVI_20190418+NDVI_20200417)/2)
+
+#Plotting everything as we did before
+#Making a list to allow the loop and to determine the min and max values for the color ramp 
+change_list <- list(change_20200417_20210427, change_avg20192020_avg20212022, change_20220417_20230405, 
+                    change_avg20212022_avg20232024, change_avg20192020_avg20232024)
+change_min <- min(sapply(change_list, function(x) min(values(x), na.rm = TRUE)))
+change_max <- max(sapply(change_list, function(x) max(values(x), na.rm = TRUE)))
+
+#Captions
+change_captions <- c("NDVI change after fire 1, april 2020 versus april 2021", "Change in average NDVI 2019/20 versus 2021/22", 
+                     "NDVI change after fire 2, april 2022 versus april 2023", "Change in average NDVI 2021/22 versus 2023/24", 
+                     "Change in total average NDVI: 2019/20 versus 2023/24")
+
+#Putting the plot together 
+dev.off()
+par(mfrow = c(5, 1), mar = c(5, 4, 2, 1))
+for (i in seq_along(change_list)) {
+  plot(change_list[[i]], axes=TRUE, range=c(change_min, change_max))
+  mtext(change_captions[i], side = 1, line = 4, cex = 0.8, font = 1, col = "black", outer = FALSE)
+}
+
+#This is a bit difficult to interpret. Therefore, we make the coloring categorical.
+#This time the range is made symmetrical to allow for a separate colour around the 0 point: positive versus negative. 
+#First, one with 5 categories. 
+dev.off()
+par(mfrow = c(5, 1), mar = c(5, 4, 2, 1))
+for (i in seq_along(change_list)) {
+  plot(change_list[[i]], col=viridis(5), axes=TRUE, range=c(-0.9, 0.9))
+  mtext(change_captions[i], side = 1, line = 4, cex = 0.8, font = 1, col = "black", outer = FALSE)
+}
+
+#Then another one with only 3 categories, to make it clearer. 
+dev.off()
+par(mfrow = c(5, 1), mar = c(5, 4, 2, 1))
+for (i in seq_along(change_list)) {
+  plot(change_list[[i]], col=viridis(3), axes=TRUE, range=c(-0.9, 0.9))
+  mtext(change_captions[i], side = 1, line = 4, cex = 0.8, font = 1, col = "black", outer = FALSE)
+}
+
+#Finally, only 2 categories
+dev.off()
+par(mfrow = c(5, 1), mar = c(5, 4, 2, 1))
+for (i in seq_along(change_list)) {
+  plot(change_list[[i]], col=viridis(2), axes=TRUE, range=c(-0.9, 0.9))
+  mtext(change_captions[i], side = 1, line = 4, cex = 0.8, font = 1, col = "black", outer = FALSE)
+}
+
+#Determining how many pixels increased or decreased for a final quantitative conclusion
+#To do this first we extract the values from all rasters made about NDVI change
+
+values_change_1 <- values(change_20200417_20210427)
+increase_1 <- length(which(values_change_1>0))
+decrease_1 <- length(which(values_change_1<=0))
+perc_decrease_1 <- (decrease_1/(decrease_1+increase_1))*100
+
+values_change_2 <- values(change_avg20192020_avg20212022)
+increase_2 <- length(which(values_change_2>0))
+decrease_2 <- length(which(values_change_2<=0))
+perc_decrease_2 <- (decrease_2/(decrease_2+increase_2))*100
+
+values_change_3 <- values(change_20220417_20230405)
+increase_3 <- length(which(values_change_3>0))
+decrease_3 <- length(which(values_change_3<=0))
+perc_decrease_3 <- (decrease_3/(decrease_3+increase_3))*100
 
 
+values_change_4 <- values(change_avg20212022_avg20232024)
+increase_4<- length(which(values_change_4>0))
+decrease_4<- length(which(values_change_4<=0))
+perc_decrease_4 <- (decrease_4/(decrease_4+increase_4))*100
+
+values_change_5 <- values(change_avg20192020_avg20232024)
+increase_5<- length(which(values_change_5>0))
+decrease_5<- length(which(values_change_5<=0))
+perc_decrease_5 <- (decrease_5/(decrease_5+increase_5))*100
+
+#Showing all decrease percentages and commenting what they mean
+perc_decrease_1 #50.5%: there was roughly as much decrease as increase in vegetation health before and after fire 1
+perc_decrease_2 #53%: even if we take the average of two years, omitting outliers, the same holds
+perc_decrease_3 #66%: after the second fire, 66% of the studied area showed a decline in vegetation health 
+perc_decrease_4 #39%: however, if we take the average of two years, only 39% shows a decline
+perc_decrease_5 #38%: if we take the average of the beginning and end of the studied period, we see an increase rather than a decline. 
