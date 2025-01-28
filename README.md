@@ -18,4 +18,4 @@ The research questions are as follows:
 
 ## What is where in this repository 🔍
 The R code is in the file "code_finalproject_SEIR_2025".
-The corresponding files are in the folder "files_finalproject_SEIR_2025". 
+The corresponding files are in the folder "data". 
