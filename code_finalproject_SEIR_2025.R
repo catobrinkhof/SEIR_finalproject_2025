@@ -1,12 +1,9 @@
 ## Step 1: Retrieve required packages from library 
 library(terra) #the terra package is used to import .tiff files as SpatRasters. It is also required to run functions from imageRy. 
-library(spatstat)
-library(usethis)
-library(devtools)
 library(imageRy) # imageRy is used to visualize satellite data. 
-library(ggplot2)
-library(raster)
-library(viridis)
+library(raster) #used for plotting
+library(viridis) #used to apply a categorized version of the viridis colour scale
+library(graphics) #used for the captions of the plots
 
 ## Step 2: Importing all data
 #Note: this data can be found in the files folder of this repository. 
